@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Equipment Tracker</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#f3f6f6;--surface:#fff;--ink:#12292e;--muted:#5b7276;--line:#d5e0e1;--brand:#0f5e63;--brand-ink:#fff;
+--ok:#1b7a4b;--okbg:#e0f2e8;--use:#1d5fa8;--usebg:#e1ecf8;--warn:#9a5b00;--warnbg:#fdf0d5;--bad:#b3261e;--badbg:#fbe4e2;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1b1d;--surface:#16272a;--ink:#e6f0f0;--muted:#92abae;--line:#2a4246;--brand:#4fb3b9;--brand-ink:#08201f;
+--ok:#6fd49c;--okbg:#17382a;--use:#7db4f0;--usebg:#15304d;--warn:#f0bf6a;--warnbg:#3b2e12;--bad:#f4948d;--badbg:#412220}}
+:root[data-theme="dark"]{--bg:#0e1b1d;--surface:#16272a;--ink:#e6f0f0;--muted:#92abae;--line:#2a4246;--brand:#4fb3b9;--brand-ink:#08201f;
+--ok:#6fd49c;--okbg:#17382a;--use:#7db4f0;--usebg:#15304d;--warn:#f0bf6a;--warnbg:#3b2e12;--bad:#f4948d;--badbg:#412220}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:20px 16px 48px}
+header{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px;margin-bottom:20px}
+h1{font-size:26px;line-height:1.2;margin:0;font-weight:600;letter-spacing:-.01em}
+header p{margin:4px 0 0;color:var(--muted);max-width:52ch}
+button,input,select{font:inherit;color:inherit}
+.btn{background:var(--brand);color:var(--brand-ink);border:0;border-radius:8px;padding:9px 16px;font-weight:500;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.sm{padding:5px 10px;font-size:13px}
+.btn.danger{color:var(--bad)}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:18px}
+.stat{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--c,var(--line));border-radius:8px;padding:12px 14px;text-align:left;cursor:pointer}
+.stat b{display:block;font-size:28px;font-weight:600;line-height:1.1}
+.stat span{color:var(--muted);font-size:13px}
+.stat[aria-pressed="true"]{outline:2px solid var(--brand)}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.tools input,.tools select,.field input,.field select{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 12px;min-width:0}
+.tools input{flex:1 1 220px}
+.table{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:13px;color:var(--muted);font-weight:500;background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td small{display:block;color:var(--muted)}
+.pill{display:inline-block;border-radius:99px;padding:2px 10px;font-size:13px;font-weight:500}
+.s-Available{background:var(--okbg);color:var(--ok)}
+.s-In-use{background:var(--usebg);color:var(--use)}
+.s-Maintenance{background:var(--warnbg);color:var(--warn)}
+.s-Out-of-service{background:var(--badbg);color:var(--bad)}
+.due-over{color:var(--bad);font-weight:600}.due-soon{color:var(--warn);font-weight:600}
+.acts{display:flex;gap:6px;flex-wrap:wrap}
+.empty{padding:36px 16px;text-align:center;color:var(--muted)}
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);padding:0;width:min(460px,calc(100% - 24px))}
+dialog::backdrop{background:rgba(5,20,22,.55)}
+form{padding:20px;display:grid;gap:12px}
+form h2{margin:0;font-size:19px}
+.field{display:grid;gap:4px;font-size:14px}
+.field span{color:var(--muted)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.foot{display:flex;justify-content:flex-end;gap:8px;margin-top:4px}
+.note{color:var(--muted);font-size:13px;margin-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div>
+    <h1>Equipment tracker</h1>
+    <p>See where every device is, who has it, and when it needs service.</p>
+  </div>
+  <button class="btn" id="add">Add equipment</button>
+</header>
+
+<div class="stats" id="stats"></div>
+
+<div class="tools">
+  <input id="q" type="search" placeholder="Search name, tag, location or person" aria-label="Search equipment">
+  <select id="cat" aria-label="Filter by category"></select>
+  <select id="due" aria-label="Filter by service">
+    <option value="">Any service date</option>
+    <option value="soon">Service due in 30 days</option>
+    <option value="over">Service overdue</option>
+  </select>
+</div>
+
+<div class="table">
+  <table>
+    <thead><tr><th>Equipment</th><th>Location</th><th>Status</th><th>Assigned to</th><th>Next service</th><th>Actions</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <div class="empty" id="empty" hidden>No equipment matches. Clear the filters or add a new item.</div>
+</div>
+<p class="note">Changes are saved in this browser only. Do not enter patient information.</p>
+</div>
+
+<dialog id="dlg">
+  <form id="f" method="dialog">
+    <h2 id="dt">Add equipment</h2>
+    <label class="field"><span>Name</span><input id="fn" required></label>
+    <div class="row">
+      <label class="field"><span>Asset tag</span><input id="ft" required></label>
+      <label class="field"><span>Category</span>
+        <select id="fc"><option>Monitoring</option><option>Diagnostic</option><option>Mobility</option><option>Respiratory</option><option>Infusion</option><option>Surgical</option></select></label>
+    </div>
+    <label class="field"><span>Location</span><input id="fl" required></label>
+    <div class="row">
+      <label class="field"><span>Status</span>
+        <select id="fs"><option>Available</option><option>In use</option><option>Maintenance</option><option>Out of service</option></select></label>
+      <label class="field"><span>Assigned to</span><input id="fa" placeholder="Name or unit"></label>
+    </div>
+    <label class="field"><span>Next service date</span><input id="fd" type="date"></label>
+    <div class="foot"><button type="button" class="btn ghost" id="cancel">Cancel</button><button class="btn" id="save" type="submit">Save equipment</button></div>
+  </form>
+</dialog>
+
+<script>
+(function(){
+var KEY="equip-tracker-v1",STAT=["Available","In use","Maintenance","Out of service"];
+var COL={"Available":"var(--ok)","In use":"var(--use)","Maintenance":"var(--warn)","Out of service":"var(--bad)"};
+function d(n){var t=new Date();t.setDate(t.getDate()+n);return t.toISOString().slice(0,10)}
+var seed=[
+{id:1,name:"Vital signs monitor",tag:"MON-0112",cat:"Monitoring",loc:"Ward 3, Bay 2",status:"In use",who:"Nurse Byrne",due:d(45)},
+{id:2,name:"Portable ECG machine",tag:"DGN-0208",cat:"Diagnostic",loc:"Cardiology clinic",status:"Available",who:"",due:d(12)},
+{id:3,name:"Infusion pump",tag:"INF-0331",cat:"Infusion",loc:"Ward 3 store",status:"Available",who:"",due:d(-6)},
+{id:4,name:"Ventilator",tag:"RES-0045",cat:"Respiratory",loc:"ICU, Bed 4",status:"In use",who:"ICU team",due:d(90)},
+{id:5,name:"Wheelchair, bariatric",tag:"MOB-0517",cat:"Mobility",loc:"Main entrance",status:"Available",who:"",due:""},
+{id:6,name:"Ultrasound scanner",tag:"DGN-0260",cat:"Diagnostic",loc:"Biomedical workshop",status:"Maintenance",who:"Biomedical eng.",due:d(7)},
+{id:7,name:"Defibrillator",tag:"RES-0071",cat:"Respiratory",loc:"Emergency dept",status:"Out of service",who:"",due:d(-20)}
+];
+var items=load();
+function load(){try{var s=localStorage.getItem(KEY);if(s)return JSON.parse(s)}catch(e){}return seed.slice()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(items))}catch(e){}}
+var $=function(i){return document.getElementById(i)};
+var fStatus="",editing=null;
+
+function days(s){if(!s)return null;return Math.round((new Date(s+"T00:00:00")-new Date(new Date().toDateString()))/864e5)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+function stats(){
+  var h='<button class="stat" style="--c:var(--brand)" data-s="" aria-pressed="'+(fStatus===""?"true":"false")+'"><b>'+items.length+'</b><span>All equipment</span></button>';
+  STAT.forEach(function(s){var n=items.filter(function(i){return i.status===s}).length;
+    h+='<button class="stat" style="--c:'+COL[s]+'" data-s="'+s+'" aria-pressed="'+(fStatus===s?"true":"false")+'"><b>'+n+'</b><span>'+s+'</span></button>'});
+  $("stats").innerHTML=h;
+}
+function cats(){
+  var cur=$("cat").value,set={};items.forEach(function(i){set[i.cat]=1});
+  $("cat").innerHTML='<option value="">All categories</option>'+Object.keys(set).sort().map(function(c){return'<option>'+esc(c)+'</option>'}).join("");
+  $("cat").value=cur;
+}
+function render(){
+  stats();cats();
+  var q=$("q").value.toLowerCase(),c=$("cat").value,du=$("due").value;
+  var list=items.filter(function(i){
+    var dd=days(i.due);
+    if(fStatus&&i.status!==fStatus)return false;
+    if(c&&i.cat!==c)return false;
+    if(du==="over"&&!(dd!==null&&dd<0))return false;
+    if(du==="soon"&&!(dd!==null&&dd>=0&&dd<=30))return false;
+    return !q||[i.name,i.tag,i.loc,i.who].join(" ").toLowerCase().indexOf(q)>-1;
+  });
+  $("rows").innerHTML=list.map(function(i){
+    var dd=days(i.due),dl="No date",cl="";
+    if(dd!==null){dl=i.due+(dd<0?" ("+(-dd)+" days overdue)":dd<=30?" (in "+dd+" days)":"");cl=dd<0?"due-over":dd<=30?"due-soon":""}
+    var next=i.status==="In use"?'<button class="btn ghost sm" data-a="in" data-id="'+i.id+'">Check in</button>'
+      :i.status==="Available"?'<button class="btn ghost sm" data-a="out" data-id="'+i.id+'">Check out</button>':'';
+    return '<tr><td><b>'+esc(i.name)+'</b><small>'+esc(i.tag)+' · '+esc(i.cat)+'</small></td><td>'+esc(i.loc)+'</td>'
+      +'<td><span class="pill s-'+i.status.replace(/ /g,"-")+'">'+i.status+'</span></td><td>'+(esc(i.who)||'<small>Nobody</small>')+'</td>'
+      +'<td class="'+cl+'">'+dl+'</td><td><div class="acts">'+next
+      +'<button class="btn ghost sm" data-a="edit" data-id="'+i.id+'">Edit</button>'
+      +'<button class="btn ghost sm danger" data-a="del" data-id="'+i.id+'">Delete</button></div></td></tr>';
+  }).join("");
+  $("empty").hidden=list.length>0;
+}
+function open(it){
+  editing=it?it.id:null;$("dt").textContent=it?"Edit equipment":"Add equipment";
+  $("fn").value=it?it.name:"";$("ft").value=it?it.tag:"";$("fc").value=it?it.cat:"Monitoring";
+  $("fl").value=it?it.loc:"";$("fs").value=it?it.status:"Available";$("fa").value=it?it.who:"";$("fd").value=it?it.due:"";
+  $("dlg").showModal();$("fn").focus();
+}
+$("add").onclick=function(){open(null)};
+$("cancel").onclick=function(){$("dlg").close()};
+$("f").onsubmit=function(){
+  var o={name:$("fn").value.trim(),tag:$("ft").value.trim(),cat:$("fc").value,loc:$("fl").value.trim(),status:$("fs").value,who:$("fa").value.trim(),due:$("fd").value};
+  if(editing){items=items.map(function(i){return i.id===editing?Object.assign({id:i.id},o):i})}
+  else{o.id=Date.now();items.unshift(o)}
+  save();render();
+};
+$("stats").onclick=function(e){var b=e.target.closest(".stat");if(!b)return;fStatus=b.dataset.s;render()};
+["q","cat","due"].forEach(function(id){$(id).oninput=render});
+$("rows").onclick=function(e){
+  var b=e.target.closest("button");if(!b)return;
+  var id=+b.dataset.id,it=items.filter(function(i){return i.id===id})[0],a=b.dataset.a;
+  if(a==="edit")return open(it);
+  if(a==="del"){if(!confirm("Delete "+it.name+" ("+it.tag+")?"))return;items=items.filter(function(i){return i.id!==id})}
+  if(a==="out"){var w=prompt("Check out "+it.name+" to (name or unit):");if(!w)return;it.status="In use";it.who=w.trim()}
+  if(a==="in"){it.status="Available";it.who=""}
+  save();render();
+};
+render();
+})();
+</script>
+</body>
+</html>
