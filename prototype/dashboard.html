@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Dashboard | Equipment Tracker</title>
+	<style>
+		:root{--bg:#f3f6f6;--surface:#fff;--ink:#12292e;--muted:#5b7276;--line:#d5e0e1;--brand:#0f5e63;--brand-soft:#e3f1ef;--ok:#1b7a4b;--warn:#9a5b00;--bad:#b3261e;box-sizing:border-box}
+		*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}a{color:inherit;text-decoration:none}:focus-visible{outline:2px solid var(--brand);outline-offset:3px}
+		.layout{min-height:100vh;display:grid;grid-template-columns:238px minmax(0,1fr)}
+		.sidebar{display:flex;flex-direction:column;padding:24px 15px;background:#12383d;color:#eef7f6}.brand{display:flex;align-items:center;gap:11px;padding:0 10px 30px;font-weight:600}.brand-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:10px;background:#a8d8cf;color:#12383d;font-size:20px;font-weight:700}.nav-title{padding:0 11px;color:#a9c2c2;font-size:11px;font-weight:600;letter-spacing:.13em;text-transform:uppercase}nav{display:grid;gap:6px;margin-top:10px}.nav-link{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:8px;color:#d0e0df;font-size:14px}.nav-link:hover,.nav-link.active{background:#24565a;color:#fff}.nav-icon{width:20px;text-align:center;font-size:17px}.sidebar-foot{margin-top:auto;padding:18px 10px 0;border-top:1px solid #ffffff2b;color:#bbcecd;font-size:12px}.logout{display:block;margin-top:12px;color:#fff;font-size:14px;font-weight:500}
+		main{min-width:0;padding:30px clamp(18px,4vw,52px) 46px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:30px;color:var(--muted);font-size:13px}.user{display:flex;align-items:center;gap:9px}.avatar{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:var(--brand-soft);color:var(--brand);font-weight:600}
+		header{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:16px;margin-bottom:23px}h1{margin:0;font-size:28px;line-height:1.2;font-weight:600;letter-spacing:-.02em}.subtitle{margin:6px 0 0;color:var(--muted)}.button{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 15px;border:1px solid var(--brand);border-radius:8px;background:var(--brand);color:#fff;font-size:14px;font-weight:500}.button:hover{background:#0b4b4f}
+		.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:20px}.stat,.panel{border:1px solid var(--line);border-radius:10px;background:var(--surface)}.stat{padding:17px}.stat-label{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--muted);font-size:13px}.stat-icon{width:30px;height:30px;display:grid;place-items:center;border-radius:8px;background:var(--brand-soft);color:var(--brand)}.stat strong{display:block;margin-top:12px;font-size:28px;line-height:1;font-weight:600}.stat small{display:block;margin-top:8px;color:var(--muted);font-size:12px}
+		.columns{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(240px,.85fr);gap:15px}.panel{overflow:hidden}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line)}h2{margin:0;font-size:16px;font-weight:600}.panel-head a{color:var(--brand);font-size:13px;font-weight:500}.table-scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;text-align:left}th,td{padding:12px 17px;border-bottom:1px solid var(--line);vertical-align:middle}th{background:#f8fafa;color:var(--muted);font-size:12px;font-weight:500}td{font-size:13px}td small{display:block;margin-top:2px;color:var(--muted);font-size:12px}tr:last-child td{border-bottom:0}.pill{display:inline-block;padding:3px 9px;border-radius:99px;background:#fdf0d5;color:var(--warn);font-size:12px;white-space:nowrap}.pill.bad{background:#fbe4e2;color:var(--bad)}
+		.quick-links{padding:4px 18px 10px}.quick-link{display:flex;align-items:flex-start;gap:11px;padding:14px 0;border-bottom:1px solid var(--line)}.quick-link:last-child{border:0}.quick-icon{width:30px;height:30px;flex:0 0 30px;display:grid;place-items:center;border-radius:50%;background:var(--brand-soft);color:var(--brand)}.quick-link strong{display:block;color:var(--brand);font-size:13px;font-weight:500}.quick-link small{display:block;margin-top:3px;color:var(--muted);font-size:12px}
+		@media(max-width:900px){.layout{grid-template-columns:205px minmax(0,1fr)}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.columns{grid-template-columns:1fr}}
+		@media(max-width:620px){.layout{display:block}.sidebar{padding:12px 14px}.brand{padding:0 2px 12px}.nav-title,.sidebar-foot{display:none}nav{display:flex;overflow-x:auto;margin:0;gap:4px}.nav-link{flex:0 0 auto;padding:9px 10px;font-size:13px}.nav-icon{display:none}main{padding:20px 14px 34px}.topbar{margin-bottom:22px}.user-name{display:none}h1{font-size:25px}.stats{gap:9px}.stat{padding:13px}.stat strong{font-size:25px}.table{min-width:570px}}
+	</style>
+</head>
+<body>
+	<div class="layout">
+		<aside class="sidebar">
+			<a class="brand" href="dashboard.html"><span class="brand-icon" aria-hidden="true">＋</span><span>Equipment Tracker</span></a>
+			<div class="nav-title">Workspace</div>
+			<nav aria-label="Main navigation">
+				<a class="nav-link active" href="dashboard.html" aria-current="page"><span class="nav-icon" aria-hidden="true">▦</span>Overview</a>
+				<a class="nav-link" href="Equipment_Tracker_for_Health_Providers.html"><span class="nav-icon" aria-hidden="true">▤</span>Equipment</a>
+				<a class="nav-link" href="Equipment_Tracker_for_Health_Providers.html#due"><span class="nav-icon" aria-hidden="true">◷</span>Service schedule</a>
+			</nav>
+			<div class="sidebar-foot">Equipment management<a class="logout" href="Log_in.html">↪&nbsp; Log out</a></div>
+		</aside>
+		<main>
+			<div class="topbar"><span>Workspace&nbsp; / &nbsp;Overview</span><div class="user"><span class="avatar" aria-hidden="true">ET</span><span class="user-name">Equipment team</span></div></div>
+			<header><div><h1>Overview</h1><p class="subtitle">A clear view of your healthcare equipment.</p></div><a class="button" href="Equipment_Tracker_for_Health_Providers.html">View equipment</a></header>
+			<section class="stats" aria-label="Equipment summary">
+				<article class="stat"><div class="stat-label">Total equipment <span class="stat-icon" aria-hidden="true">▤</span></div><strong>7</strong><small>Across your inventory</small></article>
+				<article class="stat"><div class="stat-label">Available <span class="stat-icon" aria-hidden="true">✓</span></div><strong>3</strong><small>Ready to be assigned</small></article>
+				<article class="stat"><div class="stat-label">In use <span class="stat-icon" aria-hidden="true">↗</span></div><strong>2</strong><small>Currently assigned</small></article>
+				<article class="stat"><div class="stat-label">Needs attention <span class="stat-icon" aria-hidden="true">!</span></div><strong>2</strong><small>Service or status follow-up</small></article>
+			</section>
+			<div class="columns">
+				<section class="panel" aria-labelledby="review-heading"><div class="panel-head"><h2 id="review-heading">Equipment to review</h2><a href="Equipment_Tracker_for_Health_Providers.html">View all →</a></div><div class="table-scroll"><table><thead><tr><th>Equipment</th><th>Location</th><th>Status</th></tr></thead><tbody>
+					<tr><td>Infusion pump<small>INF-0331</small></td><td>Ward 3 store</td><td><span class="pill">Service overdue</span></td></tr>
+					<tr><td>Ultrasound scanner<small>DGN-0260</small></td><td>Biomedical workshop</td><td><span class="pill">Maintenance</span></td></tr>
+					<tr><td>Defibrillator<small>RES-0071</small></td><td>Emergency dept</td><td><span class="pill bad">Out of service</span></td></tr>
+				</tbody></table></div></section>
+				<section class="panel" aria-labelledby="links-heading"><div class="panel-head"><h2 id="links-heading">Quick links</h2></div><div class="quick-links">
+					<a class="quick-link" href="Equipment_Tracker_for_Health_Providers.html"><span class="quick-icon" aria-hidden="true">▤</span><span><strong>Open equipment inventory</strong><small>Search, filter and update equipment</small></span></a>
+					<a class="quick-link" href="Equipment_Tracker_for_Health_Providers.html#add"><span class="quick-icon" aria-hidden="true">＋</span><span><strong>Manage equipment</strong><small>Add or update assets in the tracker</small></span></a>
+					<a class="quick-link" href="Log_in.html"><span class="quick-icon" aria-hidden="true">↪</span><span><strong>Log out</strong><small>Return to the sign-in page</small></span></a>
+				</div></section>
+			</div>
+		</main>
+	</div>
+</body>
+</html>

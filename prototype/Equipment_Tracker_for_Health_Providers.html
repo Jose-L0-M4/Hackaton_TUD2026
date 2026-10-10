@@ -18,9 +18,11 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
 .wrap{max-width:1100px;margin:0 auto;padding:20px 16px 48px}
 header{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px;margin-bottom:20px}
+.header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 h1{font-size:26px;line-height:1.2;margin:0;font-weight:600;letter-spacing:-.01em}
 header p{margin:4px 0 0;color:var(--muted);max-width:52ch}
 button,input,select{font:inherit;color:inherit}
+a.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
 .btn{background:var(--brand);color:var(--brand-ink);border:0;border-radius:8px;padding:9px 16px;font-weight:500;cursor:pointer}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
 .btn.sm{padding:5px 10px;font-size:13px}
@@ -66,7 +68,10 @@ form h2{margin:0;font-size:19px}
     <h1>Equipment tracker</h1>
     <p>See where every device is, who has it, and when it needs service.</p>
   </div>
-  <button class="btn" id="add">Add equipment</button>
+  <div class="header-actions">
+    <a class="btn ghost" href="dashboard.html">Dashboard</a>
+    <button class="btn" id="add">Add equipment</button>
+  </div>
 </header>
 
 <div class="stats" id="stats"></div>

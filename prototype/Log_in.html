@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Log in | Equipment Tracker</title>
+	<style>
+		:root{--bg:#f3f6f6;--surface:#fff;--ink:#12292e;--muted:#5b7276;--line:#d5e0e1;--brand:#0f5e63;--brand-soft:#e3f1ef;--error:#b3261e;box-sizing:border-box}
+		*{box-sizing:border-box}body{min-height:100vh;margin:0;display:grid;place-items:center;padding:24px;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}a{color:inherit;text-decoration:none}:focus-visible{outline:2px solid var(--brand);outline-offset:3px}
+		.card{width:min(100%,430px);padding:36px;border:1px solid var(--line);border-radius:14px;background:var(--surface);box-shadow:0 12px 34px #12383d0b}.brand{display:flex;align-items:center;gap:11px;margin-bottom:30px;font-weight:600}.brand-icon{width:40px;height:40px;display:grid;place-items:center;border-radius:10px;background:#a8d8cf;color:#12383d;font-size:21px;font-weight:700}.eyebrow{margin:0 0 5px;color:var(--brand);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}h1{margin:0;font-size:27px;line-height:1.2;font-weight:600;letter-spacing:-.02em}.intro{margin:9px 0 25px;color:var(--muted)}label{display:block;margin:0 0 6px;font-size:13px;font-weight:500}.field{margin-bottom:17px}input{width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink);font:inherit}input:focus{border-color:var(--brand);outline:2px solid #0f5e6326}.button{width:100%;min-height:44px;margin-top:4px;border:1px solid var(--brand);border-radius:8px;background:var(--brand);color:#fff;font:500 14px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}.button:hover{background:#0b4b4f}.message{min-height:22px;margin:12px 0 0;color:var(--error);font-size:13px}.demo{margin:18px 0 0;padding:12px 14px;border-radius:8px;background:var(--brand-soft);color:var(--muted);font-size:12px}.demo strong{color:var(--ink)}@media(max-width:480px){.card{padding:27px 22px}}
+	</style>
+</head>
+<body>
+	<main class="card">
+		<a class="brand" href="Log_in.html"><span class="brand-icon" aria-hidden="true">＋</span><span>Equipment Tracker</span></a>
+		<p class="eyebrow">Workspace access</p>
+		<h1>Welcome back</h1>
+		<p class="intro">Log in to manage your healthcare equipment.</p>
+		<form id="login-form">
+			<div class="field"><label for="username">Username</label><input id="username" name="username" autocomplete="username" required></div>
+			<div class="field"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" required></div>
+			<button class="button" type="submit">Log in</button>
+			<p class="message" id="message" role="status" aria-live="polite"></p>
+		</form>
+		<p class="demo"><strong>Demo login</strong><br>Username: admin<br>Password: equipment123</p>
+	</main>
+	<script>
+		document.getElementById('login-form').addEventListener('submit', function (event) {
+			event.preventDefault();
+			const username = document.getElementById('username').value.trim();
+			const password = document.getElementById('password').value;
+
+			if (username === 'admin' && password === 'equipment123') {
+				window.location.assign(new URL('dashboard.html', document.baseURI).href);
+				return;
+			}
+
+			document.getElementById('message').textContent = 'Incorrect username or password. Please try the demo login.';
+		});
+	</script>
+</body>
+</html>
